@@ -1,0 +1,245 @@
+@extends('layouts.app')
+@section('content')
+    <!-- Slider -->
+
+    @php
+      $mainBanners = App\Models\MainBanner::where('status',1)->get();
+    @endphp
+ 
+    
+    <section id="product-slider">
+        <div class="main-slider swiper-container">
+            <div class="swiper-wrapper">
+                <!-- Slide 1 -->
+                @foreach ($mainBanners as $main_banner)
+                  <div class="swiper-slide">
+                      <img src="{{$main_banner->image}}" alt="Product 1">
+                      <div class="swiper-slide-content">
+                        <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4">{{$main_banner->heading}}</h2>
+                        <p class="mb-4 text-white md:text-2xl">{!! $main_banner->description !!}</p>
+                          <a href="{{$main_banner->btn_url}}"
+                              class="{{$main_banner->btn_color}} font-semibold px-4 py-2 rounded-full inline-block">{{$main_banner->btn_text}}</a>
+                      </div>
+                  </div>
+                @endforeach
+            </div>
+        </div>
+        <!-- Slider Pagination -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </section>
+
+     @php
+      $categoryBanner = App\Models\categories::where('status',1)->get();
+    @endphp
+
+    <!-- Product banner section -->
+    <section id="product-banners">
+        <div class="container mx-auto py-10">
+            <div class="flex flex-wrap -mx-4">
+                <!-- Category 1 -->
+                @foreach($categoryBanner as $product_banner)
+                <div class="w-full sm:w-1/3 px-4 mb-8">
+                    <div class="category-banner relative overflow-hidden rounded-lg shadow-lg group">
+                        <img src="{{$product_banner->image}}" alt="Category 1" class="w-full h-auto">
+                        <div class="absolute inset-0 bg-gray-light bg-opacity-50"></div>
+                        <div
+                            class="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
+                            <h2 class="text-2xl md:text-3xl font-bold mb-4">{{$product_banner->heading}}</h2>
+                            <a href="{{$product_banner->btn_url}}"
+                                class="bg-primary hover:bg-transparent border border-transparent hover:border-white text-white hover:text-white font-semibold px-4 py-2 rounded-full inline-block">{{$product_banner->btn_text}}</a>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    @php
+      $PopularProducts = App\Models\productTable::where('status',1)->get();
+    @endphp
+
+    <!-- Popular product section -->
+    <section id="popular-products">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold mb-8">Popular products</h2>
+            <div class="flex flex-wrap -mx-4">
+                <!-- Product 1 -->
+                @foreach($PopularProducts as $product)
+                    @php
+                        $main_img = '';
+                        if($product->main_image == 1){
+                            $main_img = $product->image1;
+                        }elseif($product->main_image == 2){
+                            $main_img = $product->image2;
+                        }elseif($product->main_image == 3){
+                            $main_img = $product->image3;
+                        }elseif($product->main_image == 4){
+                            $main_img = $product->image4;
+                        }elseif($product->main_image == 5){
+                            $main_img = $product->image5;
+                        }
+                    @endphp
+                <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
+                  <div class="bg-white p-3 rounded-lg shadow-lg">
+                    <a href="/product/{{ $product->id }}">        
+                    <img src="{{$main_img}}" alt="Product 1" class="w-full object-cover mb-4 rounded-lg"></a>
+                    <a href="/product/{{ $product->id }}" class="font-semibold mb-2">{{$product->name}}</a>
+                    <p class="my-2">{{$product->brand}}</p>
+                    <div class="flex items-center mb-4">
+                      <span class="{{$product->price_color}}">${{number_format($product->discounted_price,2)}}</span>
+                      <span class="text-sm line-through ml-2">${{number_format($product->original_price,2)}}</span>
+                    </div>
+                    <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add to Cart</button>
+                  </div>
+                </div>
+
+                @endforeach
+              </div>
+        </div>
+    </section>
+
+    @php
+      $LatestProducts = App\Models\productTable::where('status', 1)
+                    ->latest()
+                    ->get();
+    @endphp
+
+    <!-- Latest product section -->
+    <section id="latest-products" class="py-10">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold mb-8">Latest products</h2>
+            <div class="flex flex-wrap -mx-4">
+                <!-- Product 1 -->
+                @foreach($LatestProducts as $product)                
+                    @php
+                        $main_img = '';
+                        if($product->main_image == 1){
+                            $main_img = $product->image1;
+                        }elseif($product->main_image == 2){
+                            $main_img = $product->image2;
+                        }elseif($product->main_image == 3){
+                            $main_img = $product->image3;
+                        }elseif($product->main_image == 4){
+                            $main_img = $product->image4;
+                        }elseif($product->main_image == 5){
+                            $main_img = $product->image5;
+                        }
+                    @endphp
+                <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
+                  <div class="bg-white p-3 rounded-lg shadow-lg">
+                    <a href="/product/{{ $product->id }}">
+                    <img src="{{$main_img}}" alt="Product 1" class="w-full object-cover mb-4 rounded-lg"></a>
+                    <a href="/product/{{ $product->id }}" class="text-lg font-semibold mb-2">{{$product->name}}</a>
+                    <p class="my-2">{{$product->brand}}</p>
+                    <div class="flex items-center mb-4">
+                      <span class="{{$product->price_color}}">${{number_format($product->discounted_price,2)}}</span>
+                      <span class="text-sm line-through ml-2">${{number_format($product->original_price,2)}}</span>
+                    </div>
+                    <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add to Cart</button>
+                  </div>
+                </div>
+                @endforeach  
+    </section>
+
+    <!-- Brand section -->
+    <section id="brands" class="bg-white py-16 px-4">
+        <div class="container mx-auto max-w-screen-xl px-4 testimonials">
+          <div class="text-center mb-12 lg:mb-20">
+            <h2 class="text-5xl font-bold mb-4">Discover <span class="text-primary">Our Brands</span></h2>
+            <p class="my-7">Explore the top brands we feature in our store</p>
+        </div>
+            <div class="swiper brands-swiper-slider">
+                <div class="swiper-wrapper">
+                    @php
+                        $BrandsBanner = App\Models\BrandsBanner::get();
+                        // dd($BrandsBanner);
+                    @endphp
+                    @foreach($BrandsBanner as $brand)
+                    <!-- Brand Logo 1 -->
+                    <div class="swiper-slide flex-none bg-gray-200 flex items-center justify-center rounded-md">
+                        <img src="{{$brand->image}}" alt="Client Logo" class="max-h-full max-w-full">
+                    </div>
+                    @endforeach
+                </div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+    </section>
+
+    <!-- Banner section -->
+    <section id="banner" class="relative my-16">
+        <div class="container mx-auto px-4 py-20 rounded-lg relative bg-cover bg-center" style="background-image: url('{{asset('images/banner1.jpg')}}">
+            <div class="absolute inset-0 bg-black opacity-40 rounded-lg"></div>
+            <div class="relative flex flex-col items-center justify-center h-full text-center text-white py-20">
+                <h2 class="text-4xl font-bold mb-4">Welcome to Our Shop</h2>
+                <div class="flex space-x-4">
+                    <a href="/Mens" class="bg-primary hover:bg-transparent text-white hover:text-primary border border-transparent hover:border-primary font-semibold px-4 py-2 rounded-full inline-block">Shop Now</a>
+                    <a href="#" class="bg-primary hover:bg-transparent text-white hover:text-primary border border-transparent hover:border-primary font-semibold px-4 py-2 rounded-full inline-block">New Arrivals</a>
+                    <a href="#" class="bg-primary hover:bg-transparent text-white hover:text-primary border border-transparent hover:border-primary font-semibold px-4 py-2 rounded-full inline-block">Sale</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog section -->
+    <section class="py-16">
+      <div class="text-center mb-12 lg:mb-20">
+          <h2 class="text-5xl font-bold mb-4">Discover <span class="text-primary">Our</span> Blog</h2>
+          <p class="my-7">Stay updated with the latest trends, tips, and stories in the world of fashion</p>
+      </div>
+      <div class="relative items-center w-full px-5 py-12 mx-auto md:px-12 lg:px-24 max-w-7xl">
+          <div class="grid w-full grid-cols-1 gap-6 mx-auto lg:grid-cols-3">
+              <div class="flex flex-col p-6 bg-white rounded-xl shadow-lg">
+                  <img class="object-cover object-center w-full mb-8 rounded-xl" src="{{asset('images/fashion-trends.jpg')}}" alt="blog">
+                  <h2 class="mb-2 text-xs font-semibold tracking-widest text-primary uppercase">Fashion Trends</h2>
+                  <h1 class="mb-4 text-2xl font-semibold leading-none tracking-tighter text-gray-dark lg:text-3xl">Latest Shirt Trends for 2024</h1>
+                  <p class="flex-grow text-base font-medium leading-relaxed text-gray-txt">Explore the hottest shirt trends of 2024. From bold prints to classic styles, stay ahead of the fashion curve with our expert insights.</p>
+                  <div class="mt-8">
+                      <a href="#" class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Read more</a>
+                  </div>
+              </div>
+              <div class="flex flex-col p-6 bg-white rounded-xl shadow-lg">
+                  <img class="object-cover object-center w-full mb-8 rounded-xl" src="{{asset('images/stylisng-tips.jpg')}}" alt="blog">
+                  <h2 class="mb-2 text-xs font-semibold tracking-widest text-primary uppercase">Styling Tips</h2>
+                  <h1 class="mb-4 text-2xl font-semibold leading-none tracking-tighter text-gray-dark lg:text-3xl">How to Style Your Shirt for Any Occasion</h1>
+                  <p class="flex-grow text-base font-medium leading-relaxed text-gray-txt">Learn how to style your shirt for different occasions, whether it's a casual day out or a formal event. Get tips from fashion experts.</p>
+                  <div class="mt-8">
+                      <a href="#" class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Read more</a>
+                  </div>
+              </div>
+              <div class="flex flex-col p-6 bg-white rounded-xl shadow-lg">
+                  <img class="object-cover object-center w-full mb-8 rounded-xl" src="{{asset('images/customer-stories.jpg')}}" alt="blog">
+                  <h2 class="mb-2 text-xs font-semibold tracking-widest text-primary uppercase">Customer Stories</h2>
+                  <h1 class="mb-4 text-2xl font-semibold leading-none tracking-tighter text-gray-dark lg:text-3xl">Real Stories from Our Happy Customers</h1>
+                  <p class="flex-grow text-base font-medium leading-relaxed text-gray-txt">Read about the experiences of our customers. Discover how our shirts have made a difference in their lives and their personal style.</p>
+                  <div class="mt-8">
+                      <a href="#" class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Read more</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </section>
+
+    <!-- Subscribe section -->
+    <section id="subscribe" class="py-6 lg:py-24 bg-white border-t border-gray-line">
+      <div class="container mx-auto">
+          <div class="flex flex-col items-center rounded-lg p-4 sm:p-0 ">
+              <div class="mb-8">
+                  <h2 class="text-center text-xl font-bold sm:text-2xl lg:text-left lg:text-3xl">Join our newsletter and <span class="text-primary">get $50 discount</span> for your first order
+                  </h2>
+              </div>
+              <div class="flex flex-col items-center w-96 ">
+                  <form class="flex w-full gap-2">
+                      <input placeholder="Enter your email address"
+                             class="w-full flex-1 rounded-full px-3 py-2 border border-gray-300 text-gray-700 placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary" />
+                      <button
+                          class="bg-primary border border-primary hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full">Subscribe</button>
+                  </form>
+              </div>
+          </div>
+      </div>
+    </section>
+
+    @endsection('content')
